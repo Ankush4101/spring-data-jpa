@@ -43,6 +43,13 @@ public class Student {
     )
     private String email;
 
+    @OneToOne(
+            mappedBy = "student",
+            cascade = CascadeType.ALL,
+            orphanRemoval = false
+    )
+    private StudentIdCard studentIdCard;
+
     public Student() {
     }
 
@@ -106,6 +113,14 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public StudentIdCard getStudentIdCard() {
+        return studentIdCard;
+    }
+
+    public void setStudentIdCard(StudentIdCard studentIdCard) {
+        this.studentIdCard = studentIdCard;
     }
 
     @Override

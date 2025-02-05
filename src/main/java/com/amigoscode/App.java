@@ -9,6 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @SpringBootApplication
 public class App {
@@ -18,12 +21,61 @@ public class App {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
+    CommandLineRunner commandLineRunner(
+            StudentRepository studentRepository,
+            StudentIdCardRepository studentIdCardRepository) {
         return args -> {
-            generateRandomStudents(studentRepository);
+            StudentIdCard studentIdCard = new StudentIdCard();
+            studentIdCard.setCardNumber("12345");
+
+            Student student = new Student(
+                    "foo", "bar", 18, "fb@amigoscode.com"
+            );
+
+            student.setStudentIdCard(studentIdCard);
+            studentIdCard.setStudent(student);
+            studentRepository.save(student);
+
+            studentRepository.deleteById(1L);
+
             System.out.println(studentRepository.count());
-            System.out.println(studentRepository.findAll());
+            System.out.println(studentIdCardRepository.count());
         };
+    }
+
+    private static void uniVsBiderectional(StudentRepository studentRepository) {
+        StudentIdCard studentIdCard = new StudentIdCard();
+        studentIdCard.setCardNumber("12345");
+
+        Student student = new Student(
+                "foo", "bar", 18, "fb@amigoscode.com"
+        );
+
+        student.setStudentIdCard(studentIdCard);
+        studentIdCard.setStudent(student);
+        studentRepository.save(student);
+        Optional<Student> s = studentRepository.findById(1L);
+        System.out.println(s.get().getStudentIdCard());
+    }
+
+    private static void example1(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {
+        Student student = new Student(
+                "foo", "bar", 18, "fb@amigoscode.com"
+        );
+        student = studentRepository.save(student);
+        StudentIdCard studentIdCard = new StudentIdCard();
+        studentIdCard.setCardNumber("12345");
+        studentIdCard.setStudent(student);
+        studentIdCardRepository.save(studentIdCard);
+        System.out.println("-----------");
+        Optional<StudentIdCard> card = studentIdCardRepository.findById(1L);
+        System.out.println(card.get().getId());
+        System.out.println(card.get().getCardNumber());
+        System.out.println(card.get().getCreatedAt());
+        Optional<StudentIdCard> studentIdCardByIdWithStudent =
+                studentIdCardRepository.findStudentIdCardByIdWithStudent(1L);
+        System.out.println(studentIdCardByIdWithStudent.get().getStudent());
+        System.out.println(card.get().getStudent());
     }
 
     private static void paging(StudentRepository studentRepository) {
@@ -50,7 +102,7 @@ public class App {
 
     private static void generateRandomStudents(StudentRepository studentRepository) {
         Faker faker = new Faker();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 2; i++) {
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
             String email = """
