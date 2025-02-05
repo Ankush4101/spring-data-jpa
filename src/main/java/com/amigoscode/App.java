@@ -27,8 +27,25 @@ public class App {
             System.out.println(studentRepository.findById(1L));
             System.out.println(studentRepository.existsById(1L));
             System.out.println(studentRepository.existsById(2L));
-            studentRepository.deleteById(1L);
+            System.out.println(studentRepository.findStudentByEmail(
+                    "foobar@amigoscode.com"
+            ));
+            System.out.println(
+                    studentRepository
+                            .findStudentsByFirstNameEqualsAndAgeGreaterThanEqual(
+                                    "Foo", 18
+                            ));
+            // studentRepository.deleteById(1L);
+            studentRepository.deleteStudentByEmail("foobar@amigoscode.com");
             System.out.println(studentRepository.count());
+            System.out.println(studentRepository.findStudentByEmail(
+                    "foobar@amigoscode.com"
+            ));
+            System.out.println(
+                    studentRepository
+                            .findStudentsByFirstNameEqualsAndAgeGreaterThanEqualNative(
+                                    "foo", 23
+                            ));
         };
     }
 
