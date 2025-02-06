@@ -1,4 +1,4 @@
-package com.amigoscode;
+package com.amigoscode.student;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

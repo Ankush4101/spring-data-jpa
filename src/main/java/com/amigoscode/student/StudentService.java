@@ -1,4 +1,4 @@
-package com.amigoscode;
+package com.amigoscode.student;
 
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;

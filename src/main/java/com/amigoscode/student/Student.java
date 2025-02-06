@@ -1,5 +1,7 @@
-package com.amigoscode;
+package com.amigoscode.student;
 
+import com.amigoscode.book.Book;
+import com.amigoscode.studentidcard.StudentIdCard;
 import jakarta.persistence.*;
 
 import java.util.HashSet;

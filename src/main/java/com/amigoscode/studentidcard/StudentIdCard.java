@@ -1,5 +1,6 @@
-package com.amigoscode;
+package com.amigoscode.studentidcard;
 
+import com.amigoscode.student.Student;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;

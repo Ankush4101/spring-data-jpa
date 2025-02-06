@@ -1,5 +1,12 @@
 package com.amigoscode;
 
+import com.amigoscode.book.Book;
+import com.amigoscode.book.BookRepository;
+import com.amigoscode.student.Student;
+import com.amigoscode.student.StudentRepository;
+import com.amigoscode.student.StudentService;
+import com.amigoscode.studentidcard.StudentIdCard;
+import com.amigoscode.studentidcard.StudentIdCardRepository;
 import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
