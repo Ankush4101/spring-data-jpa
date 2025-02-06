@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
+import java.util.Set;
 
 @SpringBootApplication
 public class App {
@@ -23,47 +24,80 @@ public class App {
     CommandLineRunner commandLineRunner(
             StudentRepository studentRepository,
             StudentIdCardRepository studentIdCardRepository,
-            BookRepository bookRepository) {
+            BookRepository bookRepository,
+            StudentService studentService) {
         return args -> {
-            Student foo = new Student(
-                    "foo", "bar", 18, "foo@amigoscode.com"
-            );
-
-            foo = studentRepository.save(foo);
-
-            Book foosBook = new Book();
-            foosBook.setTitle("Spring Data JPA");
-            foosBook.setStudent(foo);
-            bookRepository.save(foosBook);
-
-            // Jamila
-
             Student jamila = new Student(
                     "jamila", "bar", 18, "jamila@amigoscode.com"
             );
 
-            jamila = studentRepository.save(jamila);
+            Book book = new Book();
+            book.setTitle("Spring AI");
 
-            Book jamilasBook = new Book();
-            jamilasBook.setTitle("Spring AI");
-            jamilasBook.setStudent(jamila);
-            bookRepository.save(jamilasBook);
+            jamila.addBook(book);
 
-            // List all books with their students
+            studentRepository.save(jamila);
 
-            System.out.println("all books");
+            System.out.println(bookRepository.count());
 
-            bookRepository.findAll().forEach(b -> {
-                System.out.println(b.getTitle());
-                System.out.println(b.getStudent().getFirstName());
-                System.out.println();
+            jamila.removeBook(book);
+
+            studentRepository.save(jamila);
+
+            System.out.println(bookRepository.count());
+
+            studentRepository.selectStudentWithBooks().forEach(s -> {
+                System.out.println(s.getFirstName());
+                System.out.println("Books size: " + s.getBooks().size());
             });
+            System.out.println(studentRepository.count());
 
-            bookRepository.deleteAll();
-
-            System.out.println("Total books after delete " + bookRepository.count());
-            System.out.println("Total students after delete " + studentRepository.count());
         };
+    }
+
+    private static void oneToManyExamples(StudentRepository studentRepository, BookRepository bookRepository, StudentService studentService) {
+        // Jamila
+        Student jamila = new Student(
+                "jamila", "bar", 18, "jamila@amigoscode.com"
+        );
+
+        Book jamilasBook = new Book();
+        jamilasBook.setTitle("Spring AI");
+        jamilasBook.setStudent(jamila);
+
+        jamila.setBooks(Set.of(jamilasBook));
+
+        // Save student and jpa will save the book too
+        studentRepository.save(jamila);
+
+        // List all books with their students
+
+        System.out.println("all books");
+
+        bookRepository.findAll().forEach(b -> {
+            System.out.println(b.getTitle());
+            System.out.println(b.getStudent().getFirstName());
+            System.out.println();
+        });
+
+        System.out.println("getStudentWithBooks");
+
+        studentService.getStudentWithBooks(1L).ifPresent(s -> {
+            System.out.println(s.getFirstName());
+            s.getBooks().forEach(b -> {
+                System.out.println("Book: " + b.getTitle());
+            });
+        });
+
+        System.out.println("all students");
+
+        // list all students
+//            studentRepository.selectStudentWithBooks().forEach(s -> {
+//                System.out.println(s.getFirstName());
+//                s.getBooks().forEach(b -> {
+//                    System.out.println("Book: " + b.getTitle());
+//                });
+//            });
     }
 
     private static void lifeCycle(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {

@@ -30,4 +30,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Modifying
     @Query("DELETE FROM Student s WHERE s.email = ?1")
     int deleteStudentByEmail(String email);
+
+    @Query("SELECT s FROM Student s JOIN FETCH s.books")
+    List<Student> selectStudentWithBooks();
+
+    @Query("SELECT s FROM Student s JOIN FETCH s.books WHERE s.id = ?1")
+    Optional<Student> findStudentByIdWithBooks(Long studentId);
 }
