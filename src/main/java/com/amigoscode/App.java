@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,22 +22,62 @@ public class App {
     @Bean
     CommandLineRunner commandLineRunner(
             StudentRepository studentRepository,
-            StudentIdCardRepository studentIdCardRepository) {
+            StudentIdCardRepository studentIdCardRepository,
+            BookRepository bookRepository) {
         return args -> {
-
-            Student student = new Student(
-                    "foo", "bar", 18, "fb@amigoscode.com"
+            Student foo = new Student(
+                    "foo", "bar", 18, "foo@amigoscode.com"
             );
 
-            student = studentRepository.save(student);
+            foo = studentRepository.save(foo);
 
-            StudentIdCard studentIdCard = new StudentIdCard();
-            studentIdCard.setCardNumber("12345");
-            studentIdCard.setStudent(student);
+            Book foosBook = new Book();
+            foosBook.setTitle("Spring Data JPA");
+            foosBook.setStudent(foo);
+            bookRepository.save(foosBook);
 
-            studentIdCardRepository.save(studentIdCard);
+            // Jamila
 
+            Student jamila = new Student(
+                    "jamila", "bar", 18, "jamila@amigoscode.com"
+            );
+
+            jamila = studentRepository.save(jamila);
+
+            Book jamilasBook = new Book();
+            jamilasBook.setTitle("Spring AI");
+            jamilasBook.setStudent(jamila);
+            bookRepository.save(jamilasBook);
+
+            // List all books with their students
+
+            System.out.println("all books");
+
+            bookRepository.findAll().forEach(b -> {
+                System.out.println(b.getTitle());
+                System.out.println(b.getStudent().getFirstName());
+                System.out.println();
+            });
+
+            bookRepository.deleteAll();
+
+            System.out.println("Total books after delete " + bookRepository.count());
+            System.out.println("Total students after delete " + studentRepository.count());
         };
+    }
+
+    private static void lifeCycle(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {
+        Student student = new Student(
+                "foo", "bar", 18, "fb@amigoscode.com"
+        );
+
+        student = studentRepository.save(student);
+
+        StudentIdCard studentIdCard = new StudentIdCard();
+        studentIdCard.setCardNumber("12345");
+        studentIdCard.setStudent(student);
+
+        studentIdCardRepository.save(studentIdCard);
     }
 
     private static void uniVsBiderectional(StudentRepository studentRepository) {
@@ -57,14 +96,7 @@ public class App {
     }
 
     private static void example1(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {
-        Student student = new Student(
-                "foo", "bar", 18, "fb@amigoscode.com"
-        );
-        student = studentRepository.save(student);
-        StudentIdCard studentIdCard = new StudentIdCard();
-        studentIdCard.setCardNumber("12345");
-        studentIdCard.setStudent(student);
-        studentIdCardRepository.save(studentIdCard);
+        lifeCycle(studentRepository, studentIdCardRepository);
         System.out.println("-----------");
         Optional<StudentIdCard> card = studentIdCardRepository.findById(1L);
         System.out.println(card.get().getId());
