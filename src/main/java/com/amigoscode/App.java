@@ -2,6 +2,8 @@ package com.amigoscode;
 
 import com.amigoscode.book.Book;
 import com.amigoscode.book.BookRepository;
+import com.amigoscode.course.Course;
+import com.amigoscode.course.CourseRepository;
 import com.amigoscode.student.Student;
 import com.amigoscode.student.StudentRepository;
 import com.amigoscode.student.StudentService;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -32,34 +35,64 @@ public class App {
             StudentRepository studentRepository,
             StudentIdCardRepository studentIdCardRepository,
             BookRepository bookRepository,
-            StudentService studentService) {
+            StudentService studentService,
+            CourseRepository courseRepository) {
         return args -> {
+
             Student jamila = new Student(
                     "jamila", "bar", 18, "jamila@amigoscode.com"
             );
 
-            Book book = new Book();
-            book.setTitle("Spring AI");
+            Student alex = new Student(
+                    "alex", "bar", 18, "alex@amigoscode.com"
+            );
 
-            jamila.addBook(book);
+            Course csCourse = new Course(
+                    "Computer Science", "Informatics"
+            );
 
-            studentRepository.save(jamila);
+            Course aiCourse = new Course(
+                    "Artificial Intelligence", "Informatics"
+            );
 
-            System.out.println(bookRepository.count());
+            jamila.addCourse(csCourse);
+            jamila.addCourse(aiCourse);
+            alex.addCourse(csCourse);
 
-            jamila.removeBook(book);
+            studentRepository.saveAll(
+                    List.of(jamila, alex)
+            );
 
-            studentRepository.save(jamila);
-
-            System.out.println(bookRepository.count());
-
-            studentRepository.selectStudentWithBooks().forEach(s -> {
-                System.out.println(s.getFirstName());
-                System.out.println("Books size: " + s.getBooks().size());
-            });
-            System.out.println(studentRepository.count());
+            System.out.println(courseRepository.count());
 
         };
+    }
+
+    private static void oneToManyExamples(StudentRepository studentRepository, BookRepository bookRepository) {
+        Student jamila = new Student(
+                "jamila", "bar", 18, "jamila@amigoscode.com"
+        );
+
+        Book book = new Book();
+        book.setTitle("Spring AI");
+
+        jamila.addBook(book);
+
+        studentRepository.save(jamila);
+
+        System.out.println(bookRepository.count());
+
+        jamila.removeBook(book);
+
+        studentRepository.save(jamila);
+
+        System.out.println(bookRepository.count());
+
+        studentRepository.selectStudentWithBooks().forEach(s -> {
+            System.out.println(s.getFirstName());
+            System.out.println("Books size: " + s.getBooks().size());
+        });
+        System.out.println(studentRepository.count());
     }
 
     private static void oneToManyExamples(StudentRepository studentRepository, BookRepository bookRepository, StudentService studentService) {

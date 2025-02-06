@@ -1,12 +1,11 @@
 package com.amigoscode.student;
 
 import com.amigoscode.book.Book;
+import com.amigoscode.course.Course;
 import com.amigoscode.studentidcard.StudentIdCard;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -61,8 +60,29 @@ public class Student {
     )
     private Set<Book> books = new HashSet<>();
 
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST}
+    )
+    @JoinTable(
+            name = "course_enrollment",
+            joinColumns = @JoinColumn(
+                    name = "student_id",
+                    foreignKey = @ForeignKey(
+                            name = "enrollment_student_id_fk"
+                    )
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "course_id",
+                    foreignKey = @ForeignKey(
+                            name = "enrollment_course_id_fk"
+                    )
+            )
+    )
+    private Set<Course> courses = new HashSet<>();
+
     public Student() {
     }
+
 
     public Student(Long id,
                    String firstName,
@@ -153,6 +173,28 @@ public class Student {
         if (books.contains(book)) {
             books.remove(book);
             book.setStudent(null); // avoid orphaned references
+        }
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void addCourse(Course course) {
+        if (!courses.contains(course)) {
+            courses.add(course);
+            course.enroll(this);
+        }
+    }
+
+    public void removeCourse(Course course) {
+        if (!courses.contains(course)) {
+            courses.remove(course);
+            course.removeStudent(this);
         }
     }
 
