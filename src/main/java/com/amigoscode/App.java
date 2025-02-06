@@ -25,21 +25,19 @@ public class App {
             StudentRepository studentRepository,
             StudentIdCardRepository studentIdCardRepository) {
         return args -> {
-            StudentIdCard studentIdCard = new StudentIdCard();
-            studentIdCard.setCardNumber("12345");
 
             Student student = new Student(
                     "foo", "bar", 18, "fb@amigoscode.com"
             );
 
-            student.setStudentIdCard(studentIdCard);
+            student = studentRepository.save(student);
+
+            StudentIdCard studentIdCard = new StudentIdCard();
+            studentIdCard.setCardNumber("12345");
             studentIdCard.setStudent(student);
-            studentRepository.save(student);
 
-            studentRepository.deleteById(1L);
+            studentIdCardRepository.save(studentIdCard);
 
-            System.out.println(studentRepository.count());
-            System.out.println(studentIdCardRepository.count());
         };
     }
 
