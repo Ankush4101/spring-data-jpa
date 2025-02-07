@@ -1,5 +1,6 @@
 package com.amigoscode.course;
 
+import com.amigoscode.courseenrollment.CourseEnrollment;
 import com.amigoscode.student.Student;
 import jakarta.persistence.*;
 
@@ -36,10 +37,11 @@ public class Course {
     )
     private String department;
 
-    @ManyToMany(
-            mappedBy = "courses"
+    @OneToMany(
+            cascade = {CascadeType.PERSIST},
+            mappedBy = "course"
     )
-    private Set<Student> students = new HashSet<>();
+    private Set<CourseEnrollment> courseEnrollments = new HashSet<>();
 
     public Course() {}
 
@@ -72,19 +74,19 @@ public class Course {
         this.department = department;
     }
 
-    public Set<Student> getStudents() {
-        return students;
+    public Set<CourseEnrollment> getCourseEnrollments() {
+        return courseEnrollments;
     }
 
-    public void setStudents(Set<Student> students) {
-        this.students = students;
+    public void setCourseEnrollments(Set<CourseEnrollment> courseEnrollments) {
+        this.courseEnrollments = courseEnrollments;
     }
 
-    public void enroll(Student student) {
-        students.add(student);
-    }
-
-    public void removeStudent(Student student) {
-        students.remove(student);
-    }
+    //    public void enroll(Student student) {
+//        students.add(student);
+//    }
+//
+//    public void removeStudent(Student student) {
+//        students.remove(student);
+//    }
 }

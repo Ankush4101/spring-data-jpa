@@ -4,6 +4,8 @@ import com.amigoscode.book.Book;
 import com.amigoscode.book.BookRepository;
 import com.amigoscode.course.Course;
 import com.amigoscode.course.CourseRepository;
+import com.amigoscode.courseenrollment.CourseEnrollment;
+import com.amigoscode.courseenrollment.CourseEnrollmentRepository;
 import com.amigoscode.student.Student;
 import com.amigoscode.student.StudentRepository;
 import com.amigoscode.student.StudentService;
@@ -36,7 +38,8 @@ public class App {
             StudentIdCardRepository studentIdCardRepository,
             BookRepository bookRepository,
             StudentService studentService,
-            CourseRepository courseRepository) {
+            CourseRepository courseRepository,
+            CourseEnrollmentRepository courseEnrollmentRepository) {
         return args -> {
 
             Student jamila = new Student(
@@ -47,6 +50,8 @@ public class App {
                     "alex", "bar", 18, "alex@amigoscode.com"
             );
 
+            studentRepository.saveAll(List.of(jamila, alex));
+
             Course csCourse = new Course(
                     "Computer Science", "Informatics"
             );
@@ -55,15 +60,35 @@ public class App {
                     "Artificial Intelligence", "Informatics"
             );
 
-            jamila.addCourse(csCourse);
-            jamila.addCourse(aiCourse);
-            alex.addCourse(csCourse);
+            courseRepository.saveAll(List.of(csCourse, aiCourse));
 
-            studentRepository.saveAll(
-                    List.of(jamila, alex)
+            courseEnrollmentRepository.saveAll(
+                    List.of(
+                            new CourseEnrollment(jamila, csCourse),
+                            new CourseEnrollment(jamila, aiCourse),
+                            new CourseEnrollment(alex, aiCourse)
+                    )
             );
 
+            courseEnrollmentRepository.findAll().forEach(courseEnrollment -> {
+                System.out.println(courseEnrollment.getCourseEnrollmentId());
+                System.out.printf(
+                        "%s %s%n",
+                                courseEnrollment.getStudent().getFirstName(),
+                                courseEnrollment.getCourse().getName()
+                        );
+                System.out.println();
+            });
+
             System.out.println(courseRepository.count());
+
+//            jamila.addCourse(csCourse);
+//            jamila.addCourse(aiCourse);
+//            alex.addCourse(csCourse);
+//
+//            studentRepository.saveAll(
+//                    List.of(jamila, alex)
+//            );
 
         };
     }
