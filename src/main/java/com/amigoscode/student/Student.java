@@ -2,6 +2,7 @@ package com.amigoscode.student;
 
 import com.amigoscode.book.Book;
 import com.amigoscode.course.Course;
+import com.amigoscode.courseenrollment.CourseEnrollment;
 import com.amigoscode.studentidcard.StudentIdCard;
 import jakarta.persistence.*;
 
