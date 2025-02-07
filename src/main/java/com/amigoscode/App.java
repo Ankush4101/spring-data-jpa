@@ -50,8 +50,6 @@ public class App {
                     "alex", "bar", 18, "alex@amigoscode.com"
             );
 
-            studentRepository.saveAll(List.of(jamila, alex));
-
             Course csCourse = new Course(
                     "Computer Science", "Informatics"
             );
@@ -60,15 +58,11 @@ public class App {
                     "Artificial Intelligence", "Informatics"
             );
 
-            courseRepository.saveAll(List.of(csCourse, aiCourse));
+            jamila.addCourseEnrollment(csCourse);
+            jamila.addCourseEnrollment(aiCourse);
+            alex.addCourseEnrollment(csCourse);
 
-            courseEnrollmentRepository.saveAll(
-                    List.of(
-                            new CourseEnrollment(jamila, csCourse),
-                            new CourseEnrollment(jamila, aiCourse),
-                            new CourseEnrollment(alex, aiCourse)
-                    )
-            );
+            studentRepository.saveAll(List.of(jamila, alex));
 
             courseEnrollmentRepository.findAll().forEach(courseEnrollment -> {
                 System.out.println(courseEnrollment.getCourseEnrollmentId());
@@ -80,15 +74,19 @@ public class App {
                 System.out.println();
             });
 
-            System.out.println(courseRepository.count());
+            System.out.println("remove jamila from cs course");
+            jamila.removeCourseEnrollment(csCourse);
+            studentRepository.save(jamila);
 
-//            jamila.addCourse(csCourse);
-//            jamila.addCourse(aiCourse);
-//            alex.addCourse(csCourse);
-//
-//            studentRepository.saveAll(
-//                    List.of(jamila, alex)
-//            );
+            courseEnrollmentRepository.findAll().forEach(courseEnrollment -> {
+                System.out.println(courseEnrollment.getCourseEnrollmentId());
+                System.out.printf(
+                        "%s %s%n",
+                        courseEnrollment.getStudent().getFirstName(),
+                        courseEnrollment.getCourse().getName()
+                );
+                System.out.println();
+            });
 
         };
     }

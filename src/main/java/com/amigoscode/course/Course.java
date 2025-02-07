@@ -39,7 +39,8 @@ public class Course {
 
     @OneToMany(
             cascade = {CascadeType.PERSIST},
-            mappedBy = "course"
+            mappedBy = "course",
+            orphanRemoval = true
     )
     private Set<CourseEnrollment> courseEnrollments = new HashSet<>();
 
@@ -82,11 +83,12 @@ public class Course {
         this.courseEnrollments = courseEnrollments;
     }
 
-    //    public void enroll(Student student) {
-//        students.add(student);
-//    }
-//
-//    public void removeStudent(Student student) {
-//        students.remove(student);
-//    }
+    public void addCourseEnrollment(Student student) {
+        courseEnrollments.add(new CourseEnrollment(student, this));
+    }
+
+    public void removeCourseEnrollment(Student student) {
+        courseEnrollments.removeIf(
+                enrollment -> enrollment.getStudent().equals(student));
+    }
 }
