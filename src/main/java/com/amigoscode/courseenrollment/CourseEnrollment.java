@@ -4,6 +4,8 @@ import com.amigoscode.course.Course;
 import com.amigoscode.student.Student;
 import jakarta.persistence.*;
 
+import java.time.ZonedDateTime;
+
 @Entity
 public class CourseEnrollment {
 
@@ -29,6 +31,16 @@ public class CourseEnrollment {
     )
     @MapsId("courseId")
     private Course course;
+
+    @Column(
+            nullable = false
+    )
+    private ZonedDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = ZonedDateTime.now();
+    }
 
     public CourseEnrollment() {}
 
@@ -62,4 +74,11 @@ public class CourseEnrollment {
         this.course = course;
     }
 
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
