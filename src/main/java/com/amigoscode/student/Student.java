@@ -5,7 +5,10 @@ import com.amigoscode.course.Course;
 import com.amigoscode.courseenrollment.CourseEnrollment;
 import com.amigoscode.studentidcard.StudentIdCard;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
@@ -13,6 +16,12 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Entity
 @Table(
         name = "student"
+)
+@SQLDelete(
+        sql = "UPDATE student SET deleted_at = NOW() WHERE id = ?"
+)
+@SQLRestriction(
+        "deleted_at IS NULL"
 )
 public class Student {
 
@@ -53,6 +62,8 @@ public class Student {
             orphanRemoval = false
     )
     private StudentIdCard studentIdCard;
+
+    private ZonedDateTime deletedAt;
 
     @OneToMany(
             mappedBy = "student",
@@ -179,6 +190,14 @@ public class Student {
     public void removeCourseEnrollment(Course course) {
         courseEnrollments.removeIf(
                 enrollment -> enrollment.getCourse().equals(course));
+    }
+
+    public ZonedDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(ZonedDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     @Override
