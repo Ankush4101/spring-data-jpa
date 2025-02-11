@@ -6,8 +6,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class App {
 
     public static void main(String[] args) {
@@ -21,13 +23,20 @@ public class App {
                     "jamila", "bar", 18, "jamila@amigoscode.com"
             );
 
-            studentRepository.save(jamila);
+            jamila = studentRepository.save(jamila);
+
+            System.out.println("Created By " + jamila.getCreatedBy());
+            System.out.println("Created At " + jamila.getCreatedAt());
+            System.out.println("Modified At " + jamila.getModifiedAt());
+            System.out.println("Modified By " + jamila.getModifiedBy());
 
             System.out.println(studentRepository.count());
 
             studentRepository.deleteById(1L);
 
             System.out.println(studentRepository.count());
+
+            studentRepository.findById(1L);
         };
     }
 

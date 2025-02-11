@@ -7,7 +7,13 @@ import com.amigoscode.studentidcard.StudentIdCard;
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -23,6 +29,10 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @SQLRestriction(
         "deleted_at IS NULL"
 )
+@EntityListeners({
+        AuditingEntityListener.class,
+        StudentListener.class
+})
 public class Student {
 
     @Id
@@ -78,6 +88,19 @@ public class Student {
             orphanRemoval = true
     )
     private Set<CourseEnrollment> courseEnrollments = new HashSet<>();
+
+    @CreatedDate
+    @Column(updatable = false)
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant modifiedAt;
+
+    @LastModifiedBy
+    private String modifiedBy;
+
+    @CreatedBy
+    private String createdBy;
 
     public Student() {
     }
@@ -198,6 +221,38 @@ public class Student {
 
     public void setDeletedAt(ZonedDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(Instant modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
