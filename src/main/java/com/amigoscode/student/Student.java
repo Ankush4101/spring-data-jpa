@@ -256,15 +256,30 @@ public class Student {
     }
 
     @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", deletedAt=" + deletedAt +
+                ", createdAt=" + createdAt +
+                ", modifiedAt=" + modifiedAt +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Objects.equals(id, student.id) && Objects.equals(firstName, student.firstName) && Objects.equals(lastName, student.lastName) && Objects.equals(age, student.age) && Objects.equals(email, student.email);
+        return Objects.equals(id, student.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, age, email);
+        return Objects.hashCode(id);
     }
-
 }

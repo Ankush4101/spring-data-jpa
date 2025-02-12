@@ -85,4 +85,13 @@ public class Book {
     public void setStudent(Student student) {
         this.student = student;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

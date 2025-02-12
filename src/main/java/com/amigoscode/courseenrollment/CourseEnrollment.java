@@ -5,6 +5,7 @@ import com.amigoscode.student.Student;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 @Entity
 public class CourseEnrollment {
@@ -80,5 +81,17 @@ public class CourseEnrollment {
 
     public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CourseEnrollment courseEnrollment = (CourseEnrollment) o;
+        return Objects.equals(courseEnrollmentId, courseEnrollment.courseEnrollmentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(courseEnrollmentId);
     }
 }

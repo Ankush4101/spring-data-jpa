@@ -27,18 +27,8 @@ public class App {
                     "jamila", "bar", 18, "jamila@amigoscode.com"
             );
 
-            jamila = studentRepository.save(jamila);
+            studentRepository.save(jamila);
 
-            System.out.println("Created By " + jamila.getCreatedBy());
-            System.out.println("Created At " + jamila.getCreatedAt());
-            System.out.println("Modified At " + jamila.getModifiedAt());
-            System.out.println("Modified By " + jamila.getModifiedBy());
-
-            System.out.println(studentRepository.count());
-
-            // studentRepository.deleteById(1L);
-
-            System.out.println(studentRepository.count());
 
             studentRepository.findById(1L);
 
@@ -48,10 +38,14 @@ public class App {
 
             bookRepository.save(book);
 
-            bookRepository.getAllBooksDto().forEach(System.out::println);
+            // bookRepository.findAll().forEach(System.out::println);
+
+            studentRepository
+                    .findStudentByIdWithBooks(1L)
+                    .ifPresent(System.out::println);
+
         };
     }
-
 
 
 }
