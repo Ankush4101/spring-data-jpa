@@ -1,5 +1,7 @@
 package com.amigoscode;
 
+import com.amigoscode.book.Book;
+import com.amigoscode.book.BookRepository;
 import com.amigoscode.student.Student;
 import com.amigoscode.student.StudentRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +19,9 @@ public class App {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
+    CommandLineRunner commandLineRunner(
+            StudentRepository studentRepository,
+            BookRepository bookRepository) {
         return args -> {
             Student jamila = new Student(
                     "jamila", "bar", 18, "jamila@amigoscode.com"
@@ -32,11 +36,19 @@ public class App {
 
             System.out.println(studentRepository.count());
 
-            studentRepository.deleteById(1L);
+            // studentRepository.deleteById(1L);
 
             System.out.println(studentRepository.count());
 
             studentRepository.findById(1L);
+
+            Book book = new Book();
+            book.setTitle("Spring Data JPA");
+            book.setStudent(jamila);
+
+            bookRepository.save(book);
+
+            bookRepository.getAllBooksDto().forEach(System.out::println);
         };
     }
 
